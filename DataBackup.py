@@ -6,7 +6,7 @@ import shutil
 
 
 class Database():
-    """All functions for the Database.txt    """
+    """All functions for the backupdatabase.txt"""
     def __init__(self):
         """Init of Database
 
@@ -20,7 +20,7 @@ class Database():
         else:
             print("You are using an unsupported operating system. The Programm will stop now.")
             quit()
-        if os.path.isfile(self.__location) == True:
+        if os.path.isfile(self.__location):
             pass
         else:
             self.createfile()
@@ -28,11 +28,13 @@ class Database():
         self.__Content = self.readfile()
 
     def createfile(self):
+        """creates backupdatabase.txt if not existant"""
         __file = open(self.__location, mode="w")
         __file.close()
 
     def readfile(self):
-        __file = open(self.__location, mode="r")
+        """reads content of backupdatabase.txt, reformats the string as a list and saves it to self.__Content"""
+        __file = open(self.__location)
         __filecontent = __file.read()
         __file.close()
         __filecontent = __filecontent.split("\n")
@@ -44,11 +46,14 @@ class Database():
         return __filecontent
 
     def savetofile(self):
+        """reformats self.__Content to string and saves it to self.location"""
         __tosave = deepcopy(self.__Content)
         for element in range(0, len(__tosave)):
-            __tosave[element][0] = str(__tosave[element][0][0] + "-" + __tosave[element][0][1] + "-" + __tosave[element][0][2])
+            __tosave[element][0] = \
+                str(__tosave[element][0][0] + "-" + __tosave[element][0][1] + "-" + __tosave[element][0][2])
         for element in range(0, len(__tosave)):
-            __tosave[element] = str(__tosave[element][0] + "\t" + __tosave[element][1] + "\t" + __tosave[element][2] + "\n")
+            __tosave[element] = \
+                str(__tosave[element][0] + "\t" + __tosave[element][1] + "\t" + __tosave[element][2] + "\n")
         __tosave = "".join(__tosave)
         __DB = open(self.__location, mode="w")
         __DB.write(__tosave)
@@ -58,12 +63,15 @@ class Database():
         return self.__Content
 
     def addcontent(self, __date, __src, __dst):
+        """adds things to self.__Content
+        """
         __date = str(__date)
         __date = __date.split("-")
         __toadd = [__date, __src, __dst]
         self.__Content.append(__toadd)
 
     def srcinlist(self, __src):
+        """checks if a source is in self.__Content"""
         __position = []
         for element in range(0, len(self.__Content)):
             if self.__Content[element][1] == __src:
@@ -80,35 +88,39 @@ class Database():
                 del __position[-1]
 
 
-class backup():
+class Backup():
     def __init__(self):
         self.__today = datetime.date.today()
+        self.__filesindb = DB.getcontent()
         self.__filestobackup = self.auto()
 
     def auto(self):
+        """searches for files in the database, wich were'nt backupped in 7 days"""
         __filestobackup = []
-        __filestocheck = DB.getcontent()
+        __filestocheck = self.__filesindb
         for element in range(0, len(__filestocheck)):
-            __yearofelement = int(__filestocheck[element][0][0])
-            __monthofelement = int(__filestocheck[element][0][1])
-            __dayofelement = int(__filestocheck[element][0][2])
+            __yofelement = int(__filestocheck[element][0][0])
+            __mofelement = int(__filestocheck[element][0][1])
+            __dofelement = int(__filestocheck[element][0][2])
             __datelastbackup = datetime.date.today()
-            __datelastbackup = __datelastbackup.replace(year=__yearofelement, month=__monthofelement, day=__dayofelement)
+            __datelastbackup = __datelastbackup.replace(year=__yofelement, month=__mofelement, day=__dofelement)
             __delta = self.__today - __datelastbackup
             if __delta.days >= 7:
-                __filestobackup.append(__filestocheck[element])
+                __filestobackup.append(element)
         return __filestobackup
 
     def dobackup(self):
-        while len(self.__filestobackup) != 0:
-            __src = self.__filestobackup[0][1]
+        """performs the backup"""
+        for element in range(0, len(self.__filestobackup)):
+            __src = self.__filesindb[self.__filestobackup[element]][1]
+            __dst = self.__filesindb[self.__filestobackup[element]][2]
             if os.path.isdir(__src):
-                __dst = self.__filestobackup[0][2]
-                shutil.copytree(__src, __dst, symlinks=False, ignore=None, ignore_dangling_symlinks=True)
-                del self.__filestobackup[0]
+                shutil.copytree(__src, __dst, symlinks=False, ignore=None)
             elif os.path.isfile(__src):
-                __dst = self.__filestobackup[0][2]
                 shutil.copy(__src, __dst)
+            else:
+                print("the following path is corrupt: " + __src)
+
 
 DB = Database()
-BU = backup()
+BU = Backup()
