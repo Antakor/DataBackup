@@ -28,7 +28,7 @@
         <entry file="file://$PROJECT_DIR$/DataBackup.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.74285716">
-              <caret line="73" column="34" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
+              <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -320,7 +320,13 @@
       <option name="project" value="LOCAL" />
       <updated>1449923498089</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Complete Database Functions #2">
+      <created>1449928714873</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1449928714873</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -362,7 +368,8 @@
     <MESSAGE value="First Databse Functions" />
     <MESSAGE value="First Databse Functions #2" />
     <MESSAGE value="Complete Database Functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete Database Functions" />
+    <MESSAGE value="Complete Database Functions #2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Complete Database Functions #2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -460,7 +467,7 @@
     <entry file="file://$PROJECT_DIR$/DataBackup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74285716">
-          <caret line="73" column="34" selection-start-line="73" selection-start-column="34" selection-end-line="73" selection-end-column="34" />
+          <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
