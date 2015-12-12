@@ -70,7 +70,7 @@ class Database():
         __toadd = [__date, __src, __dst]
         self.__Content.append(__toadd)
 
-    def srcinlist(self, __src):
+    def posofsrcindb(self, __src):
         """checks if a source is in self.__Content"""
         __position = []
         for element in range(0, len(self.__Content)):
@@ -113,7 +113,7 @@ class Backup():
             __src = self.__filesindb[self.__objectstobackup[element]][1]
             __dst = self.__filesindb[self.__objectstobackup[element]][2]
             if os.path.isdir(__src):
-                shutil.copytree(__src, __dst, symlinks=False, ignore=None)
+                shutil.copytree(__src, __dst, symlinks=False)
                 DB.addcontent(self.__today, __src, __dst)
             elif os.path.isfile(__src):
                 shutil.copy(__src, __dst)
@@ -126,3 +126,8 @@ class Backup():
 
 DB = Database()
 BU = Backup()
+def addnewentry():
+    __src = input("Source Path:")
+    __dst = input("Destination Path:")
+    __date = datetime.date.today()
+    DB.addcontent(__date, __src, __dst)
