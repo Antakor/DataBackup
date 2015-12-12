@@ -78,25 +78,23 @@ class Database():
                 __position.append(element)
         return __position
 
-    def removecontent(self, __src):
-        __position = self.srcinlist(__src)
+    def removecontent(self, __position):
         if not __position:
             pass
         else:
             for element in range(0, len(__position)):
-                del self.__Content[int(__position[-1])]
-                del __position[-1]
+                del self.__Content[int(__position[element])]
 
 
 class Backup():
     def __init__(self):
         self.__today = datetime.date.today()
         self.__filesindb = DB.getcontent()
-        self.__filestobackup = self.auto()
+        self.__objectstobackup = self.auto()
 
     def auto(self):
         """searches for files in the database, wich were'nt backupped in 7 days"""
-        __filestobackup = []
+        __objectstobackup = []
         __filestocheck = self.__filesindb
         for element in range(0, len(__filestocheck)):
             __yofelement = int(__filestocheck[element][0][0])
@@ -106,20 +104,24 @@ class Backup():
             __datelastbackup = __datelastbackup.replace(year=__yofelement, month=__mofelement, day=__dofelement)
             __delta = self.__today - __datelastbackup
             if __delta.days >= 7:
-                __filestobackup.append(element)
-        return __filestobackup
+                __objectstobackup.append(element)
+        return __objectstobackup
 
     def dobackup(self):
         """performs the backup"""
-        for element in range(0, len(self.__filestobackup)):
-            __src = self.__filesindb[self.__filestobackup[element]][1]
-            __dst = self.__filesindb[self.__filestobackup[element]][2]
+        for element in range(0, len(self.__objectstobackup)):
+            __src = self.__filesindb[self.__objectstobackup[element]][1]
+            __dst = self.__filesindb[self.__objectstobackup[element]][2]
             if os.path.isdir(__src):
                 shutil.copytree(__src, __dst, symlinks=False, ignore=None)
+                DB.addcontent(self.__today, __src, __dst)
             elif os.path.isfile(__src):
                 shutil.copy(__src, __dst)
+                DB.addcontent(self.__today, __src, __dst)
             else:
                 print("the following path is corrupt: " + __src)
+        DB.removecontent(self.__objectstobackup)
+        DB.savetofile()
 
 
 DB = Database()
