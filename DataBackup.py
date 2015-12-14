@@ -5,18 +5,19 @@ from copy import deepcopy
 import shutil
 
 
-class Database():
+class Database:
     """All functions for the backupdatabase.txt"""
     def __init__(self):
         """Init of Database
 
-        __location -- path of the backupdatabase.txt
-        __Content -- Contents of backupdatabase.txt reformated as a list
+        __location -- path of the backupdatabase
+        __Content -- Contents of backupdatabase reformated as a list
         """
+        self.__filenameofdb = "backupdatabase"
         if platform.system() == "Windows":
-            self.__location = str(os.path.dirname(os.path.realpath(__file__)) + "\\backupdatabase.txt")
+            self.__location = str(os.path.dirname(os.path.realpath(__file__)) + "\\" + str(self.__filenameofdb))
         elif platform.system() == "Linux":
-            self.__location = str(os.path.dirname(os.path.realpath(__file__)) + "/backupdatabase.txt")
+            self.__location = str(os.path.dirname(os.path.realpath(__file__)) + "/" + str(self.__filenameofdb))
         else:
             print("You are using an unsupported operating system. The Programm will stop now.")
             quit()
@@ -28,7 +29,7 @@ class Database():
         self.__Content = self.readfile()
 
     def createfile(self):
-        """creates backupdatabase.txt if not existant"""
+        """creates database .txt if not existant"""
         __file = open(self.__location, mode="w")
         __file.close()
 
@@ -86,7 +87,7 @@ class Database():
                 del self.__Content[int(__position[element])]
 
 
-class Backup():
+class Backup:
     def __init__(self):
         self.__today = datetime.date.today()
         self.__filesindb = DB.getcontent()
@@ -114,12 +115,12 @@ class Backup():
             __dst = self.__filesindb[self.__objectstobackup[element]][2]
             if os.path.isdir(__src):
                 shutil.copytree(__src, __dst, symlinks=False)
-                DB.addcontent(self.__today, __src, __dst)
+                DB.addcontent(str(self.__today), __src, __dst)
             elif os.path.isfile(__src):
                 if not os.path.exists(__dst):
                     os.makedirs(__dst)
                 shutil.copy(__src, __dst)
-                DB.addcontent(self.__today, __src, __dst)
+                DB.addcontent(str(self.__today), __src, __dst)
             else:
                 print("the following path is corrupt: " + __src)
         DB.removecontent(self.__objectstobackup)
@@ -132,5 +133,5 @@ BU = Backup()
 def addnewentry():
     __src = input("Source Path:")
     __dst = input("Destination Path:")
-    __date = datetime.date.today()
+    __date = str(datetime.date.today())
     DB.addcontent(__date, __src, __dst)
