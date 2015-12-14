@@ -116,16 +116,19 @@ class Backup():
                 shutil.copytree(__src, __dst, symlinks=False)
                 DB.addcontent(self.__today, __src, __dst)
             elif os.path.isfile(__src):
+                if not os.path.exists(__dst):
+                    os.makedirs(__dst)
                 shutil.copy(__src, __dst)
                 DB.addcontent(self.__today, __src, __dst)
             else:
                 print("the following path is corrupt: " + __src)
         DB.removecontent(self.__objectstobackup)
-        DB.savetofile()
 
 
 DB = Database()
 BU = Backup()
+
+
 def addnewentry():
     __src = input("Source Path:")
     __dst = input("Destination Path:")
