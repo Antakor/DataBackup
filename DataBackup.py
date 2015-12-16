@@ -36,8 +36,7 @@ class Database:
             if os.path.isdir(__srcnew):
                 self.checkdirs(__srcnew, __dstnew)
             elif os.path.isfile(__srcnew):
-                if not self.posofsrcindb(__srcnew):
-                    print("adding")
+                if self.posofsrcindb(__srcnew) == []:
                     self.addcontent(__srcnew, __dst)
             else:
                 pass
@@ -135,15 +134,11 @@ class Backup:
         for element in range(0, len(self.__objectstobackup)):
             __src = self.__filesindb[self.__objectstobackup[element]][1]
             __dst = self.__filesindb[self.__objectstobackup[element]][2]
-            if os.path.isdir(__src):
-                shutil.copytree(__src, __dst, symlinks=False)
-                DB.addcontent(__src, __dst)
-            elif os.path.isfile(__src):
+            if os.path.isfile(__src):
                 if not os.path.exists(__dst):
                     os.makedirs(__dst)
                 shutil.copy(__src, __dst)
                 DB.addcontent(__src, __dst)
-                print(DB.formattostring())
             else:
                 print("the following path is corrupt: " + __src)
         DB.removecontent(self.__objectstobackup)
