@@ -47,15 +47,8 @@ class Database:
         return __filecontent
 
     def savetofile(self):
-        """reformats self.__Content to string and saves it to self.location"""
-        __tosave = deepcopy(self.__Content)
-        for element in range(0, len(__tosave)):
-            __tosave[element][0] = \
-                str(__tosave[element][0][0] + "-" + __tosave[element][0][1] + "-" + __tosave[element][0][2])
-        for element in range(0, len(__tosave)):
-            __tosave[element] = \
-                str(__tosave[element][0] + "\t" + __tosave[element][1] + "\t" + __tosave[element][2] + "\n")
-        __tosave = "".join(__tosave)
+        """writes content to database file"""
+        __tosave = self.formattostring()
         __DB = open(self.__location, mode="w")
         __DB.write(__tosave)
         __DB.close()
@@ -72,7 +65,10 @@ class Database:
         self.__Content.append(__toadd)
 
     def posofsrcindb(self, __src):
-        """checks if a source is in self.__Content"""
+        """checks if a source is in self.__Content
+
+        __src - path of source
+        """
         __position = []
         for element in range(0, len(self.__Content)):
             if self.__Content[element][1] == __src:
@@ -86,12 +82,25 @@ class Database:
             for element in range(0, len(__position)):
                 del self.__Content[int(__position[element])]
 
+    def formattostring(self):
+        __toformat = deepcopy(self.__Content)
+        for element in range(0, len(__toformat)):
+            __toformat[element][0] = \
+                str(__toformat[element][0][0] + "-" + __toformat[element][0][1] + "-" + __toformat[element][0][2])
+        for element in range(0, len(__toformat)):
+            __toformat[element] = \
+                str(__toformat[element][0] + "\t" + __toformat[element][1] + "\t" + __toformat[element][2] + "\n")
+        __toformat = "".join(__toformat)
+        return __toformat
+
 
 class Backup:
     def __init__(self):
+        self.__deltat = 7
         self.__today = datetime.date.today()
         self.__filesindb = DB.getcontent()
         self.__objectstobackup = self.auto()
+
 
     def auto(self):
         """searches for files in the database, wich were'nt backupped in 7 days"""
@@ -104,7 +113,7 @@ class Backup:
             __datelastbackup = datetime.date.today()
             __datelastbackup = __datelastbackup.replace(year=__yofelement, month=__mofelement, day=__dofelement)
             __delta = self.__today - __datelastbackup
-            if __delta.days >= 7:
+            if __delta.days >= self.__deltat and os.path.isfile(__filestocheck[element][1]):
                 __objectstobackup.append(element)
         return __objectstobackup
 
