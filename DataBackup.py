@@ -178,12 +178,12 @@ def addnew():
 
 DB = Database()
 BU = Backup()
+BU.dobackup()
 print("Datasaver\n")
 print("Welcome to Datasaver. Datasaver is little programm to do backups.")
 print("You can add a new entry to the database")
 print("If you want to add an entry to your backup list type: \"add\".")
 print("To quit the programm type: \"end\".")
-"""
 while True:
     userin = input("What do you want to do?: ")
     if userin == "add":
@@ -193,4 +193,3 @@ while True:
         quit()
     else:
         print("you have not typed a valid option. try checking your spelling.")
-"""
