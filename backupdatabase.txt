@@ -1,2 +1,0 @@
-2015-12-12	D:\Daten\Eigene_Programme\DataBackup\Test1\Neues Textdokument.txt	D:\Daten\Eigene_Programme\DataBackup\Test2
-2015-12-12	D:\Daten\Eigene_Programme\DataBackup\Test1\Test	D:\Daten\Eigene_Programme\DataBackup\Test2\Test

@@ -109,14 +109,14 @@ class Database:
 
 class Backup:
     def __init__(self):
-        self.__deltat = 0
+        self.__deltat = 7
         self.__today = datetime.date.today()
         self.__filesindb = DB.getcontent()
-        self.__objectstobackup = self.auto()
+        self.__objectstobackup = []
+        self.autobackup()
 
-    def auto(self):
+    def autobackup(self):
         """searches for files in the database, wich were'nt backupped in 7 days"""
-        __objectstobackup = []
         __filestocheck = self.__filesindb
         for element in range(0, len(__filestocheck)):
             __yofelement = int(__filestocheck[element][0][0])
@@ -126,8 +126,20 @@ class Backup:
             __datelastbackup = __datelastbackup.replace(year=__yofelement, month=__mofelement, day=__dofelement)
             __delta = self.__today - __datelastbackup
             if __delta.days >= self.__deltat and os.path.isfile(__filestocheck[element][1]):
-                __objectstobackup.append(element)
-        return __objectstobackup
+                self.__objectstobackup.append(element)
+
+    def backupnew(self):
+        """searches for files in the database, wich were'nt backupped in 7 days"""
+        __filestocheck = self.__filesindb
+        for element in range(0, len(__filestocheck)):
+            __yofelement = int(__filestocheck[element][0][0])
+            __mofelement = int(__filestocheck[element][0][1])
+            __dofelement = int(__filestocheck[element][0][2])
+            __datelastbackup = datetime.date.today()
+            __datelastbackup = __datelastbackup.replace(year=__yofelement, month=__mofelement, day=__dofelement)
+            __delta = self.__today - __datelastbackup
+            if __delta.days == 0 and os.path.isfile(__filestocheck[element][1]):
+                self.__objectstobackup.append(element)
 
     def dobackup(self):
         """performs the backup"""
@@ -142,13 +154,43 @@ class Backup:
             else:
                 print("the following path is corrupt: " + __src)
         DB.removecontent(self.__objectstobackup)
+        self.__objectstobackup = []
 
+
+def addnew():
+    while True:
+        __src = input("Source Path:")
+        if DB.posofsrcindb(__src):
+            print("The source you entered is in the list.")
+            break
+        else:
+            if os.path.exists(__src):
+                __dst = input("Destination Path:")
+                DB.addcontent(__src, __dst)
+                if os.path.isdir(__src):
+                    DB.checkdirs(__src, __dst)
+                DB.savetofile()
+                BU.backupnew()
+                BU.dobackup()
+                break
+            else:
+                print("you have not entered a valid path as source")
 
 DB = Database()
 BU = Backup()
-
-
-def addnewentry():
-    __src = input("Source Path:")
-    __dst = input("Destination Path:")
-    DB.addcontent(__src, __dst)
+print("Datasaver\n")
+print("Welcome to Datasaver. Datasaver is little programm to do backups.")
+print("You can add a new entry to the database")
+print("If you want to add an entry to your backup list type: \"add\".")
+print("To quit the programm type: \"end\".")
+"""
+while True:
+    userin = input("What do you want to do?: ")
+    if userin == "add":
+        addnew()
+    elif userin == "end":
+        BU.dobackup()
+        quit()
+    else:
+        print("you have not typed a valid option. try checking your spelling.")
+"""
