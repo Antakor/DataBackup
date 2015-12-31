@@ -96,6 +96,7 @@ class Database:
                 del self.__Content[int(__position[element])]
 
     def formattostring(self):
+        """reformats list to string which is written to file"""
         __toformat = deepcopy(self.__Content)
         for element in range(0, len(__toformat)):
             __toformat[element][0] = \
@@ -129,7 +130,7 @@ class Backup:
                 self.__objectstobackup.append(element)
 
     def backupnew(self):
-        """searches for files in the database, wich were'nt backupped in 7 days"""
+        """is run if things are added to database"""
         __filestocheck = self.__filesindb
         for element in range(0, len(__filestocheck)):
             __yofelement = int(__filestocheck[element][0][0])
@@ -158,6 +159,7 @@ class Backup:
 
 
 def addnew():
+    """function to enter new entry to database"""
     while True:
         __src = input("Source Path:")
         if DB.posofsrcindb(__src):
