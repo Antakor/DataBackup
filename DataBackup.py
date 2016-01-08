@@ -5,7 +5,7 @@ import shutil
 
 
 class Database:
-    """All functions for the backupdatabase.txt"""
+    """All functions for the backupdatabase"""
     def __init__(self):
         """Init of Database
 
@@ -42,12 +42,12 @@ class Database:
                 pass
 
     def createfile(self):
-        """creates database .txt if not existant"""
+        """creates database if not existant"""
         __file = open(self.__location, mode="w")
         __file.close()
 
     def readfile(self):
-        """reads content of backupdatabase.txt, reformats the string as a list and saves it to self.__Content"""
+        """reads content of backupdatabase, reformats the string as a list and saves it to self.__Content"""
         __file = open(self.__location)
         __filecontent = __file.read()
         __file.close()
